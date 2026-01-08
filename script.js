@@ -23,7 +23,7 @@ function submitForm(){
     comments: document.getElementById("comments").value
   };
 
-  fetch("https://script.google.com/macros/s/AKfycbxhBA3TQagtI0afALULtuSosaPUViKD1_v9-_IVMZJbqQH4pLwjVrF3Pe3tvGC4xNQpmw/exec",{
+  fetch("https://script.google.com/macros/s/AKfycbw4xAI8bptL4X76OQdcZUgFPgZcmSoCcwB2Kru_uaNUYT_-mwPgdQndXQGIoV_oAafmFA/exec",{
     method:"POST",
     headers:{"Content-Type":"application/json"},
     body:JSON.stringify(data)
@@ -58,3 +58,4 @@ function submitForm(){
     alert("Submission Failed ❌");
   });
 }
+
