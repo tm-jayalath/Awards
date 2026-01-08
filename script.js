@@ -1,61 +1,108 @@
+// ===============================
+// Toggle conditional sections
+// ===============================
 function toggleSections(){
-  document.getElementById("plantation").style.display="none";
-  document.getElementById("sales").style.display="none";
-  document.getElementById("other").style.display="none";
+
+  document.getElementById("plantation").style.display = "none";
+  document.getElementById("sales").style.display = "none";
+  document.getElementById("other").style.display = "none";
 
   const category = document.getElementById("category").value;
-  if(category==="plantation") document.getElementById("plantation").style.display="block";
-  if(category==="sales") document.getElementById("sales").style.display="block";
-  if(category==="other") document.getElementById("other").style.display="block";
+
+  if(category === "plantation"){
+    document.getElementById("plantation").style.display = "block";
+  }
+
+  if(category === "sales"){
+    document.getElementById("sales").style.display = "block";
+  }
+
+  if(category === "other"){
+    document.getElementById("other").style.display = "block";
+  }
 }
 
+
+// ===============================
+// Submit form data to Google Sheet
+// ===============================
 function submitForm(){
 
-  const data = {
+  const baseUrl =
+    "https://script.google.com/macros/s/AKfycbxhBA3TQagtI0afALULtuSosaPUViKD1_v9-_IVMZJbqQH4pLwjVrF3Pe3tvGC4xNQpmw/exec";
+
+  const params = new URLSearchParams({
     fullName: document.getElementById("fullName").value,
     address: document.getElementById("address").value,
     countryCode: document.getElementById("countryCode").value,
     mobile: document.getElementById("mobile").value,
     email: document.getElementById("email").value,
     category: document.getElementById("category").value,
-    companyType: document.getElementById("otherType") ? document.getElementById("otherType").value : "",
-    companyName: document.getElementById("plantationCompany")?.value || document.getElementById("salesCompany")?.value || document.getElementById("otherCompany")?.value || "",
+    companyType: document.getElementById("otherType")
+      ? document.getElementById("otherType").value
+      : "",
+    companyName:
+      document.getElementById("plantationCompany")?.value ||
+      document.getElementById("salesCompany")?.value ||
+      document.getElementById("otherCompany")?.value ||
+      "",
     comments: document.getElementById("comments").value
-  };
-
-  fetch("https://script.google.com/macros/s/AKfycbw4xAI8bptL4X76OQdcZUgFPgZcmSoCcwB2Kru_uaNUYT_-mwPgdQndXQGIoV_oAafmFA/exec",{
-    method:"POST",
-    headers:{"Content-Type":"application/json"},
-    body:JSON.stringify(data)
-  })
-  .then(res => res.json())
-  .then(() => {
-    ["fullName","address","mobile","email","category","plantationCompany","salesCompany","otherCompany","comments"].forEach(id => {
-      const el = document.getElementById(id);
-      if(el) el.value="";
-    });
-    document.getElementById("otherType").value="Own Company";
-    toggleSections();
-
-    const successDiv = document.getElementById("successMsg");
-    successDiv.innerHTML = "Your application has been submitted successfully ✅";
-    successDiv.style.display="block";
-
-    const contactDiv = document.getElementById("contactMsg");
-    contactDiv.innerHTML = `
-      <span>Click the WhatsApp icon to contact our team:</span>
-      <a href="https://wa.me/94771234567" target="_blank" style="margin-left:5px;text-decoration:none;">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" style="height:20px; vertical-align:middle;">
-      </a>
-      <br>
-      <span>Or our team member will call you shortly. Thank you!</span>
-    `;
-    contactDiv.style.display="block";
-
-  })
-  .catch((err)=>{
-    console.error(err);
-    alert("Submission Failed ❌");
   });
-}
 
+  fetch(baseUrl + "?" + params.toString())
+    .then(res => res.text())
+    .then(() => {
+
+      // ===============================
+      // Clear form fields
+      // ===============================
+      [
+        "fullName",
+        "address",
+        "mobile",
+        "email",
+        "category",
+        "plantationCompany",
+        "salesCompany",
+        "otherCompany",
+        "comments"
+      ].forEach(id => {
+        const el = document.getElementById(id);
+        if(el) el.value = "";
+      });
+
+      if(document.getElementById("otherType")){
+        document.getElementById("otherType").value = "Own Company";
+      }
+
+      toggleSections();
+
+      // ===============================
+      // Success message
+      // ===============================
+      const successDiv = document.getElementById("successMsg");
+      successDiv.innerHTML =
+        "Your application has been submitted successfully ✅";
+      successDiv.style.display = "block";
+
+      // ===============================
+      // WhatsApp + call note
+      // ===============================
+      const contactDiv = document.getElementById("contactMsg");
+      contactDiv.innerHTML = `
+        Click the WhatsApp icon to contact our team
+        <a href="https://wa.me/94771234567" target="_blank" style="margin-left:6px">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg"
+               style="height:20px;vertical-align:middle;">
+        </a>
+        <br>
+        One of our team members will contact you shortly. Thank you!
+      `;
+      contactDiv.style.display = "block";
+
+    })
+    .catch(err => {
+      console.error(err);
+      alert("Submission Failed ❌");
+    });
+}
