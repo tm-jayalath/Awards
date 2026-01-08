@@ -29,7 +29,7 @@ function toggleSections(){
 function submitForm(){
 
   const baseUrl =
-    "https://script.google.com/macros/s/AKfycbxhBA3TQagtI0afALULtuSosaPUViKD1_v9-_IVMZJbqQH4pLwjVrF3Pe3tvGC4xNQpmw/exec";
+    "https://script.google.com/macros/s/AKfycbxQAEr-dKZ1E1nwsVlKuduRKMLaZyzMZ-odeeziBQB6I1IEPSCpjRBFuIgdq0x29zn72A/exec";
 
   const params = new URLSearchParams({
     fullName: document.getElementById("fullName").value,
@@ -106,3 +106,4 @@ function submitForm(){
       alert("Submission Failed ❌");
     });
 }
+
